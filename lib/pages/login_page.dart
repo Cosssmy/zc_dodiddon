@@ -44,14 +44,45 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(height: 50),
-                Image.asset('assets/log0_pg.png'), // Add the image
+                // Изменили размер изображения
+                Image.asset('assets/log0_pg.png', height: 100, width: 100),
                 const SizedBox(height: 20),
                 Text(
                   'Personal.Guide',
                   style: TextStyle(
-                    fontSize: 24,
+                    fontSize: 26,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 10), // Add some space between titles
+                RichText(
+                  text: TextSpan(
+                    style: TextStyle(
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    children: [
+                      TextSpan(
+                        text: 'do',
+                        style: TextStyle(
+                          color: DoDidDoneTheme.lightTheme.colorScheme.primary,
+                        ),
+                      ),
+                      TextSpan(
+                        text: '-did-',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      TextSpan(
+                        text: 'done',
+                        style: TextStyle(
+                          color:
+                              DoDidDoneTheme.lightTheme.colorScheme.secondary,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(height: 50),
