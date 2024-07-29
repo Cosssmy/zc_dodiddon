@@ -44,10 +44,12 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(height: 50),
+                Image.asset('assets/log0_pg.png'), // Add the image
+                const SizedBox(height: 20),
                 Text(
-                  _isRegistration ? 'Регистрация' : 'Вход',
-                  style: const TextStyle(
-                    fontSize: 32,
+                  'Personal.Guide',
+                  style: TextStyle(
+                    fontSize: 24,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),

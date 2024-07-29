@@ -22,7 +22,7 @@ class _ProfilePageState extends State<ProfilePage> {
           // Аватар
           CircleAvatar(
             radius: 50,
-            backgroundImage: const AssetImage('lib/assets/avatar.jpg'),
+            backgroundImage: const AssetImage('assets/avatar.jpg'),
           ),
           const SizedBox(height: 20),
           // Почта
