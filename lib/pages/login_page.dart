@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../theme/theme.dart';
 
 class LoginPage extends StatefulWidget {
@@ -12,6 +11,9 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   bool _isRegistration = false;
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +53,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 50),
                 TextFormField(
+                  style: const TextStyle(color: Colors.black),
                   decoration: const InputDecoration(
                     hintText: 'Почта',
                     filled: true,
@@ -69,7 +72,9 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
+                  style: const TextStyle(color: Colors.black),
                   obscureText: true,
+                  controller: _passwordController,
                   decoration: const InputDecoration(
                     hintText: 'Пароль',
                     filled: true,
@@ -86,6 +91,32 @@ class _LoginPageState extends State<LoginPage> {
                     return null;
                   },
                 ),
+                if (_isRegistration) ...[
+                  const SizedBox(height: 20),
+                  TextFormField(
+                    style: const TextStyle(color: Colors.black),
+                    obscureText: true,
+                    controller: _confirmPasswordController,
+                    decoration: const InputDecoration(
+                      hintText: 'Повторить пароль',
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Пожалуйста, повторите пароль';
+                      }
+                      if (value != _passwordController.text) {
+                        return 'Пароли не совпадают';
+                      }
+                      return null;
+                    },
+                  ),
+                ],
                 const SizedBox(height: 30),
                 ElevatedButton(
                   onPressed: () {
