@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:zc_dodiddon/theme/theme.dart';
+import '../services/firebase_auth.dart';
 import '../pages/login_page.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -9,66 +11,93 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  bool _isEmailVerified = false; // Флаг для проверки подтверждения почты
+  final AuthService _authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          // Аватар
-          CircleAvatar(
-            radius: 50,
-            backgroundImage: const AssetImage('assets/avatar.jpg'),
-          ),
-          const SizedBox(height: 20),
-          // Почта
-          Text(
-            'example@email.com', // Замените на почту пользователя
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 10),
+    final user = _authService.user;
 
-          // Кнопка подтверждения почты
-          if (!_isEmailVerified)
-            ElevatedButton(
-              onPressed: () {
-                // Обработка отправки запроса подтверждения почты
-                // Например, отправка запроса на сервер
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: const Text('Подтверждение почты'),
-                    content: const Text(
-                        'Письмо с подтверждением отправлено на ваш адрес.'),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text('OK'),
-                      ),
-                    ],
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            DoDidDoneTheme.lightTheme.colorScheme.primary,
+            DoDidDoneTheme.lightTheme.colorScheme.secondary,
+          ],
+        ),
+      ),
+      child: Center(
+        // Добавляем Center для вертикального центрирования
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment
+                  .center, // Убираем лишний MainAxisAlignment.center
+              children: [
+                CircleAvatar(
+                  radius: 50,
+                  backgroundImage: user?.photoURL != null
+                      ? NetworkImage(user!.photoURL!) as ImageProvider
+                      : const AssetImage('assets/avatar.jpg'),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  user?.email ?? 'example@email.com',
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 10),
+                if (user != null && !user.emailVerified)
+                  ElevatedButton(
+                    onPressed: () async {
+                      await _authService.sendEmailVerification();
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text('Подтверждение почты'),
+                          content: const Text(
+                              'Письмо с подтверждением отправлено на ваш адрес.'),
+                          actions: [
+                            TextButton(
+                              onPressed: () async {
+                                Navigator.pop(context);
+                                await _authService.signOut();
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const LoginPage()),
+                                );
+                              },
+                              child: const Text('OK'),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                    child: const Text('Подтвердить почту'),
                   ),
-                );
-              },
-              child: const Text('Подтвердить почту'),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () async {
+                    await _authService.signOut();
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LoginPage()),
+                    );
+                  },
+                  child: const Text('Выйти'),
+                ),
+              ],
             ),
-          const SizedBox(height: 20),
-          // Кнопка выхода из профиля
-          ElevatedButton(
-            onPressed: () {
-              // Обработка выхода из профиля
-              // Например, выход из аккаунта
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) {
-                return const LoginPage();
-              }));
-            },
-            child: const Text('Выйти'),
           ),
-        ],
+        ),
       ),
     );
   }
